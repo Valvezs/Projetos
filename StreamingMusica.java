@@ -10,7 +10,6 @@ public class StreamingMusica {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        // Adicionar músicas de teste
         adicionarMusicasTeste();
 
         int opcao;
@@ -68,8 +67,13 @@ public class StreamingMusica {
         System.out.print("Artista: ");
         String artista = scanner.nextLine();
 
-        System.out.print("Duração (segundos): ");
-        int duracao = Integer.parseInt(scanner.nextLine());
+        int duracao = 0;
+        try {
+            System.out.print("Duração (segundos): ");
+            duracao = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Valor inválido, duração definida como 0.");
+        }
 
         System.out.print("Gênero: ");
         String genero = scanner.nextLine();
@@ -101,7 +105,7 @@ public class StreamingMusica {
 
     public static void buscarPorTitulo() {
         System.out.println("\n--- BUSCAR POR TÍTULO ---");
-        System.out.print("título: ");
+        System.out.print("Título: ");
         String busca = scanner.nextLine().toLowerCase();
 
         boolean encontrado = false;
@@ -137,17 +141,36 @@ public class StreamingMusica {
         private int duracao;
         private String genero;
 
+        public Musica() {
+            this("Sem Título", "Sem Artista", 0, "Sem Gênero");
+        }
+
         public Musica(String titulo, String artista, int duracao, String genero) {
-            this.titulo = titulo;
-            this.artista = artista;
-            this.duracao = duracao;
-            this.genero = genero;
+            setTitulo(titulo);
+            setArtista(artista);
+            setDuracao(duracao);
+            setGenero(genero);
         }
 
         public String getTitulo() { return titulo; }
+        public void setTitulo(String titulo) {
+            this.titulo = (titulo == null || titulo.trim().isEmpty()) ? "Sem Título" : titulo;
+        }
+
         public String getArtista() { return artista; }
+        public void setArtista(String artista) {
+            this.artista = (artista == null || artista.trim().isEmpty()) ? "Sem Artista" : artista;
+        }
+
         public int getDuracao() { return duracao; }
+        public void setDuracao(int duracao) {
+            this.duracao = (duracao < 0) ? 0 : duracao;
+        }
+
         public String getGenero() { return genero; }
+        public void setGenero(String genero) {
+            this.genero = (genero == null || genero.trim().isEmpty()) ? "Sem Gênero" : genero;
+        }
     }
 
     // Classe Playlist
@@ -155,21 +178,33 @@ public class StreamingMusica {
         private String nome;
         private ArrayList<Musica> musicas;
 
+        public Playlist() {
+            this("Sem nome");
+        }
+
         public Playlist(String nome) {
-            this.nome = nome;
+            this.nome = (nome == null || nome.trim().isEmpty()) ? "Playlist sem nome" : nome;
             this.musicas = new ArrayList<>();
         }
 
-        public void adicionarMusica(Musica musica) {
-            this.musicas.add(musica);
+        public String getNome() { return nome; }
+        public void setNome(String nome) {
+            this.nome = (nome == null || nome.trim().isEmpty()) ? "Playlist sem nome" : nome;
         }
 
-        public String getNome() { return nome; }
-        public ArrayList<Musica> getMusicas() { return musicas; }
+        public ArrayList<Musica> getMusicas() {
+            return new ArrayList<>(musicas);
+        }
+
+        public void adicionarMusica(Musica musica) {
+            if (musica != null) {
+                this.musicas.add(musica);
+            }
+        }
     }
 
-       public static void adicionarMusicasTeste() {
-    playlist.adicionarMusica(new Musica("Bohemian Rhapsody", "Queen", 354, "Rock"));
-    playlist.adicionarMusica(new Musica("Billie Jean", "Michael Jackson", 293, "Pop"));
-}
+    public static void adicionarMusicasTeste() {
+        playlist.adicionarMusica(new Musica("Bohemian Rhapsody", "Queen", 354, "Rock"));
+        playlist.adicionarMusica(new Musica("Billie Jean", "Michael Jackson", 293, "Pop"));
     }
+}
